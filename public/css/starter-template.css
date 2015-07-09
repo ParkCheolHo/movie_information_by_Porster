@@ -1,0 +1,74 @@
+body {
+		padding: 80px 15px;
+}
+
+.form-group{
+	padding-left: 30px;
+	padding-right: 30px;
+}
+.content {
+	list-style:none;
+	margin-right: 30px;
+}
+.footer{
+	padding-top: 30px;
+	padding-left: 100px;
+}
+
+.login-form {
+    width: 300px;
+    margin: 0 auto;
+    position: relative;
+    
+    background: #f3f3f3;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.grid-item {
+		width: 295px;
+		height: 400px;
+		float: left;
+		margin: 30px;
+}
+
+.modal-body{
+	margin-bottom: 10%;
+}
+.modal-dialog {
+	width: 850px;
+}
+.etc{
+	width: 300px;
+}
+.modal-footer {
+  padding: 15px;
+  text-align: right;
+  border-top: 1px 
+}
+
+.like{
+	font-size: 30px;
+	margin-right: 10px
+}
+.dislike{
+	font-size: 30px;
+	margin-right: 10px
+}
+
+.liked{
+	font-size: 30px;
+	margin-right: 10px;
+	color: green;
+}
+.disliked{
+	font-size: 30px;
+	margin-right: 10px;
+	color: green;
+}
+
+

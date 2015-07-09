@@ -1,0 +1,6 @@
+.grid
+	each item in row
+		.grid-item
+			a.thumbnail(href='/movie/#{item.url}' data-toggle='modal' data-target='#myModal')
+				img(src='#{item.imgpath}')
+
