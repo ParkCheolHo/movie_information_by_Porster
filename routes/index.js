@@ -4,7 +4,7 @@ var mysql = require('mysql');
 //데이터베이스와 연결합니다.
 var connection = mysql.createConnection({
 	user: 'root',
-	password: '1q2w3e',
+	password: '0088353',
 	database: 'movie',
 });
 
@@ -21,10 +21,10 @@ exports.index = function(req, res){
 
 exports.movie = function(req, res){
 	connection.query('SELECT  *  FROM movie WHERE url= ?', [req.params.url], function(err, row) {
-	    req.session.url = req.params.url,
-	    req.session.moviename = row[0].name;
-	    res.render('movie', { row: row[0] });
-	    console.log(req.session.moviename);
+		req.session.url = req.params.url,
+			req.session.moviename = row[0].name;
+		res.render('movie', { row: row[0] });
+		console.log(req.session.moviename);
 	});
 }
 
