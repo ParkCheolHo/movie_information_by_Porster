@@ -16,6 +16,7 @@ exports.index = function(req, res){
 	start = (page-1) * offset;
 		connection.query('SELECT * FROM movie LIMIT ?, ?', [start, offset] , function(err, rows) {
 			res.render('index',{row: rows});
+			start = offset;
 		});
 };
 
