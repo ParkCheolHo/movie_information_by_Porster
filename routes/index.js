@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
 
 //DB 조회 -json으로 변환 10개씩
 var start = 0;
-var offset =600;//item per page
+var offset =30;//item per page
 var page = 1;
 exports.index = function(req, res){
 	start = (page-1) * offset;
