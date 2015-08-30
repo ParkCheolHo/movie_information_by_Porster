@@ -1,3 +1,16 @@
+$(function (){
+  // init Isotope
+  var $grid = $('.grid').isotope({
+    // options
+  });
+// filter items on button click
+  $('.filter-button-group').on( 'click', 'button', function() {
+    var filterValue = $(this).attr('data-filter');
+    $container.isotope({ filter: filterValue });
+  });
+});
+
+
 $(function () {
 	var $container = $('.grid');
 
@@ -6,7 +19,7 @@ $(function () {
 	});
 	$('#myModal').on('hidden.bs.modal',function(){
 		$(this).removeData('bs.modal')
-	});	
+	});
 });
    
   $is_login = false;
@@ -45,3 +58,5 @@ $(document).ready(function(){
     return false;
   });
 });
+
+
