@@ -1,24 +1,61 @@
-nav.navbar.navbar-inverse.navbar-fixed-top
-  .navbar-inner
-    .navbar-header
-      button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
-        span.sr-only Toggle navigation
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      a.navbar-brand(href='/') Movie Search
-    #navbar.collapse.navbar-collapse
-      ul.nav.navbar-nav
-        li
-          a(href='/') Movie
-      ul.nav.navbar-nav.navbar-right
-        li
-          a(href='register')
-            span.glyphicon.glyphicon-user
-            |  Sign Up
-        li
-          a(href='login')
-            span.glyphicon.glyphicon-log-in
-            |  Login
-  script.
-    test
+.container
+  nav.navbar.navbar-default(role='navigation')
+      .navbar-header
+        button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand(href='/') Movie Information By Poster
+      // Collect the nav links, forms, and other content for toggling
+      #bs-example-navbar-collapse-1.collapse.navbar-collapse
+        ul.nav.navbar-nav
+          li
+            a(href='/') Home
+
+          li.dropdown
+            a.dropdown-toggle(data-toggle='dropdown')
+              | Filtering
+              b.caret
+            ul.dropdown-menu(role='menu', aria-labelledby='dLabel')
+              li.menu-item.dropdown.dropdown-submenu
+                a.dropdown-toggle(href='#', data-toggle='dropdown') Genre
+                ul.dropdown-menu.filters-button-group
+                  li.menu-item
+                    a(data-filter='*') 전체보기
+                  li
+                    a(data-filter='.애니메이션') 애니메이션
+            li.dropdown
+              a.dropdown-toggle(data-toggle='dropdown')
+                | Sorting
+                b.caret
+              ul.dropdown-menu(role='menu', aria-labelledby='dLabel')
+                li.menu-item.dropdown.dropdown-submenu
+                  a.dropdown-toggle(href='#', data-toggle='dropdown') Genre
+                  ul.dropdown-menu.filters-button-group
+                    li.menu-item
+                      a(data-filter='*') 전체보기
+                    li
+                      a(data-filter='.애니메이션') 애니메이션
+        form.navbar-form.navbar-left(role='search')
+          .form-group
+            input.form-control(type='text', placeholder='Search')
+          button.btn.btn-default(type='submit') Submit
+        ul.nav.navbar-nav.navbar-right
+          li
+            a(href='javascript:void(0)') Link
+          li.dropdown
+            a.dropdown-toggle(href='javascript:void(0)', data-toggle='dropdown')
+              | Dropdown
+              b.caret
+            ul.dropdown-menu
+              li
+                a(href='javascript:void(0)') Action
+              li
+                a(href='javascript:void(0)') Another action
+              li
+                a(href='javascript:void(0)') Something else here
+              li.divider
+              li
+                a(href='javascript:void(0)') Separated link
+      // /.navbar-collapse

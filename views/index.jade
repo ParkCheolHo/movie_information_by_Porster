@@ -5,20 +5,19 @@ block content
 
         //nav.jade include
         include nav
-        .button-group.filters-button-group
-            button.button.is-checked(data-filter='*') show all
-            button.button(data-filter='.애니메이션') metal
-            button.button(data-filter='.드라마') transition
-            button.button(data-filter='.스릴러') alkali and alkaline-earth
-            button.button(data-filter=':not(.transition)') not transition
-            button.button(data-filter='.metal:not(.transition)') metal but not transition
-            button.button(data-filter='numberGreaterThan50') number > 50
-            button.button(data-filter='ium') name ends with ?ium
+        //.button-group.filters-button-group
+        //    button.button.is-checked(data-filter='*') show all
+        //    button.button(data-filter='.애니메이션') metal
+        //    button.button(data-filter='.드라마') transition
+        //    button.button(data-filter='.스릴러') alkali and alkaline-earth
+        //    button.button(data-filter=':not(.transition)') not transition
+        //    button.button(data-filter='.metal:not(.transition)') metal but not transition
+        //    button.button(data-filter='numberGreaterThan50') number > 50
+        //    button.button(data-filter='ium') name ends with ?ium
 
-
-
-        #myModal.modal.fade
-            .modal-dialog
-                .modal-content
-        //grid.jade include
-        include grid
+        .container
+            #myModal.modal.fade
+                .modal-dialog
+                    .modal-content
+            //grid.jade include
+            include grid
