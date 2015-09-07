@@ -46,8 +46,8 @@ app.post('/user/:username/withdrawal', routes.withdrawal);
 
 app.get('/logout', routes.logout);
 app.get('/api/login', routes.is_login);
-app.get('/api/count', routes.count)
-
+app.get('/api/count', routes.count);
+app.get('/api/scroll', routes.scroll);
 
 //웹서버를 실행합니다.
 var server = http.createServer(app);

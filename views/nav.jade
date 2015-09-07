@@ -6,7 +6,7 @@
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        a.navbar-brand(href='/') Movie Information By Poster
+        a.navbar-brand(href='/') Movie Information
       // Collect the nav links, forms, and other content for toggling
       #bs-example-navbar-collapse-1.collapse.navbar-collapse
         ul.nav.navbar-nav
@@ -23,8 +23,42 @@
                 ul.dropdown-menu.filters-button-group
                   li.menu-item
                     a(data-filter='*') 전체보기
+                  li.menu-item
+                    a(data-filter='.드라마') 드라마
+                  li.menu-item
+                    a(data-filter='.판타지') 판타지
+                  li.menu-item
+                    a(data-filter='.SF') SF
+                  li
+                    a(data-filter='.공포') 공포
+                  li
+                    a(data-filter='.로맨스') 로맨스
+                  li
+                    a(data-filter='.모험') 모험
+                  li
+                    a(data-filter='.스릴러') 스릴러
+                  li
+                    a(data-filter='.느와르') 느와르
+                  li
+                    a(data-filter='.다큐멘터리') 다큐멘터리
+                  li
+                    a(data-filter='.코미디') 코미디
+                  li
+                    a(data-filter='.가족') 가족
+                  li
+                    a(data-filter='.미스터리') 미스터리
+                  li
+                    a(data-filter='.전쟁') 전쟁
                   li
                     a(data-filter='.애니메이션') 애니메이션
+                  li
+                    a(data-filter='.범죄') 범죄
+                  li
+                    a(data-filter='.뮤지컬') 뮤지컬
+                  li
+                    a(data-filter='.액션') 액션
+                  li
+                    a(data-filter='.무협') 무협
             li.dropdown
               a.dropdown-toggle(data-toggle='dropdown')
                 | Sorting
@@ -35,27 +69,15 @@
                   ul.dropdown-menu.filters-button-group
                     li.menu-item
                       a(data-filter='*') 전체보기
-                    li
-                      a(data-filter='.애니메이션') 애니메이션
+
         form.navbar-form.navbar-left(role='search')
           .form-group
             input.form-control(type='text', placeholder='Search')
           button.btn.btn-default(type='submit') Submit
         ul.nav.navbar-nav.navbar-right
           li
-            a(href='javascript:void(0)') Link
-          li.dropdown
-            a.dropdown-toggle(href='javascript:void(0)', data-toggle='dropdown')
-              | Dropdown
-              b.caret
-            ul.dropdown-menu
-              li
-                a(href='javascript:void(0)') Action
-              li
-                a(href='javascript:void(0)') Another action
-              li
-                a(href='javascript:void(0)') Something else here
-              li.divider
-              li
-                a(href='javascript:void(0)') Separated link
+            a(href='/register') sign Up
+          li
+            a(href='/login') Login
+
       // /.navbar-collapse

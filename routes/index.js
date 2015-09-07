@@ -10,13 +10,15 @@ var connection = mysql.createConnection({
 
 //DB 조회 -json으로 변환 10개씩
 var start = 0;
-var offset =600;//item per page
+var offset =28;//item per page
+var refreshoffset = 16;
 var page = 1;
 exports.index = function(req, res){
 	start = (page-1) * offset;
 		connection.query('SELECT * FROM movie LIMIT ?, ?', [start, offset] , function(err, rows) {
 			res.render('index',{row: rows});
 			start = offset + 1;
+			console.log(start+ '::' + offset);
 		});
 };
 
@@ -175,5 +177,14 @@ exports.is_login = function (req, res) {
 	connection.query('SELECT * FROM movieinfo WHERE username = ?', [req.session.username], function (err, data) {
 		console.log(data);
 		res.send(data)
+	});
+}
+exports.scroll = function(req, res){
+
+	connection.query('SELECT * FROM movie LIMIT ?, ?', [start, refreshoffset] , function(err, data1) {
+		//console.log(data1);
+		start += refreshoffset + 1;
+		console.log(start + '::' + refreshoffset);
+		res.send(data1);
 	});
 }

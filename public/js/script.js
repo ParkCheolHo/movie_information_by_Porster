@@ -58,21 +58,37 @@ function is_login() {
         }
     });
 }
-
+//function scroll() {
+//    $.ajax({
+//        type: "GET",
+//        url: "/api/scroll",
+//        dataType: "json",
+//        success: function (data) {
+//            $(data).each(function (index, item){
+//
+//
+//
+//                var $container = $('#grid-content');
+//                $container.isotope( { itemSelector: 'div' } );
+//                var $test =$("<div class="+'"grid-item col-xs-12 col-md-3 '+item.genre1+'"> '+'<a href=/movie/'+item.url+' data-toggle="modal" data-target="#myModal" class="thumbnail"> '
+//                    +' <img src=" ' +item.imgpath+'">' + "</a></div>");
+//                //$container.isotope( 'appended', test );
+//                $container.isotope( 'insert', $test );
+//                //$('.row').append( output )
+//                //    // add and lay out newly appended elements
+//                //    .isotope( 'appended', output );
+//            });
+//
+//        }
+//    });
+//}
 $(document).ready(function () {
-    is_login()
-    // like_count
+    is_login();
+    ;// like_count
     $(document).on("click", "a.like_count", function () {
         return false;
     });
-    $(window).scroll(function () {
-        var scrollHeight = $(window).scrollTop() + $(window).height();
-        var documentHeight = $(document).height();
-        if (scrollHeight == documentHeight) {
-            $("<h1>무한 스크롤</h1>").appendTo("body");
-            //put in here
-        }
-    })
+
     // movie
     $(document).on("click", "a.like", function () {
         //$(this).addClass('like');
@@ -89,6 +105,13 @@ $(document).ready(function () {
         }
         return false;
     });
+    $(window).scroll(function () {
+        var scrollHeight = $(window).scrollTop() + $(window).height();
+        var documentHeight = $(document).height();
+        if (scrollHeight == documentHeight) {
+            scroll();
+            //put in here
+        }});
 });
 
 
