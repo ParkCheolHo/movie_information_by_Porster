@@ -47,9 +47,10 @@ app.post('/user/:username/withdrawal', routes.withdrawal);
 app.get('/logout', routes.logout);
 app.get('/api/login', routes.is_login);
 app.get('/api/count', routes.count);
-app.get('/api/scroll', routes.scroll);
+app.post('/api/scroll', routes.scroll);
 
-//웹서버를 실행합니다.
+app.get('/imgs/:imgname', routes.imgs);
+
 var server = http.createServer(app);
 
 //module.parent는 현재 실행된 모듈 프로세스의 부모가 있는 지 확인할 수 있는 속성입니다. 이를 이용하여 최초 실행되는 프로세스만 서버를 실행합니다.

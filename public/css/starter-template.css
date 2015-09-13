@@ -1,3 +1,8 @@
+img {
+	border: 0;
+	max-width: 100%;
+}
+
 body {
 		padding: 15px 15px;
 }
@@ -75,3 +80,6 @@ body {
 	color: green;
 }
 
+#grid-content {
+	height: 100%;
+}

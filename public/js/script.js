@@ -1,27 +1,13 @@
 $(function () {
     // init Isotope
-    var $grid = $('.grid').isotope({
+    var $grid = $('#grid-content').isotope({
         itemSelector: '.grid-item',
         layoutMode: 'fitRows'
     });
     // filter functions
-    var filterFns = {
-        // show if number is greater than 50
-        numberGreaterThan50: function () {
-            var number = $(this).find('.number').text();
-            return parseInt(number, 10) > 50;
-        },
-        // show if name ends with -ium
-        ium: function () {
-            var name = $(this).find('.name').text();
-            return name.match(/ium$/);
-        }
-    };
     // bind filter button click
     $('.filters-button-group').on('click', 'a', function () {
         var filterValue = $(this).attr('data-filter');
-        // use filterFn if matches value
-        filterValue = filterFns[filterValue] || filterValue;
         $grid.isotope({filter: filterValue});
     });
     // change is-checked class on buttons
@@ -34,18 +20,13 @@ $(function () {
     });
 
 });
-
-
 $(function () {
-    var $container = $('.grid');
-
-    $('.grid-item').imagesLoaded(function () {
-        $container.isotope({});
-    });
     $('#myModal').on('hidden.bs.modal', function () {
         $(this).removeData('bs.modal')
     });
 });
+
+
 
 $is_login = false;
 function is_login() {
@@ -58,32 +39,39 @@ function is_login() {
         }
     });
 }
-//function scroll() {
-//    $.ajax({
-//        type: "GET",
-//        url: "/api/scroll",
-//        dataType: "json",
-//        success: function (data) {
-//            $(data).each(function (index, item){
-//
-//
-//
-//                var $container = $('#grid-content');
-//                $container.isotope( { itemSelector: 'div' } );
-//                var $test =$("<div class="+'"grid-item col-xs-12 col-md-3 '+item.genre1+'"> '+'<a href=/movie/'+item.url+' data-toggle="modal" data-target="#myModal" class="thumbnail"> '
-//                    +' <img src=" ' +item.imgpath+'">' + "</a></div>");
-//                //$container.isotope( 'appended', test );
-//                $container.isotope( 'insert', $test );
-//                //$('.row').append( output )
-//                //    // add and lay out newly appended elements
-//                //    .isotope( 'appended', output );
-//            });
-//
-//        }
-//    });
-//}
+function scroll() {
+    $.ajax({
+        type: "GET",
+        url: "/api/scroll",
+        dataType: "json",
+        success: function (data) {
+            var $grid = $('#grid-content').isotope({
+                itemSelector: '.grid-item',
+                layoutMode: 'fitRows'
+            });
+            $(data).each(function (index, item){
+
+                var $test =$("<div class="+'"grid-item col-xs-6 col-md-3 '+item.genre1+ ' '+item.year+'"> '+'<a href=/movie/'+item.url+' data-toggle="modal" data-target="#myModal" class="thumbnail"> '
+                    +' <img src=" ' +item.imgpath+'">' + "</a></div>");
+                //$container.isotope( 'appended', test );
+                $grid.imagesLoaded(function () {
+                    $grid.isotope({});
+                });
+                $grid.append( $test )
+                    // add and lay out newly appended items
+                    .isotope( 'appended', $test );
+
+            });
+
+        }
+    });
+}
+
 $(document).ready(function () {
     is_login();
+    scroll();
+    var $container = $('#grid-content');
+
     ;// like_count
     $(document).on("click", "a.like_count", function () {
         return false;
@@ -105,13 +93,20 @@ $(document).ready(function () {
         }
         return false;
     });
-    $(window).scroll(function () {
-        var scrollHeight = $(window).scrollTop() + $(window).height();
-        var documentHeight = $(document).height();
-        if (scrollHeight == documentHeight) {
-            scroll();
-            //put in here
-        }});
+    $(window).scroll(Infinite);
 });
 
 
+
+function Infinite(e){
+    if((e.type == 'scroll') || e.type == 'click'){
+        var doc = document.documentElement;
+        var top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+        var bottom = top + $(window).height();
+        var docBottom = $(document).height();
+
+        if(bottom + 50 >= docBottom){
+            scroll();
+        }
+    }
+}

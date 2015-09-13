@@ -4,22 +4,18 @@ var mysql = require('mysql');
 //데이터베이스와 연결합니다.
 var connection = mysql.createConnection({
 	user: 'root',
-	password: '0088353',
+	password: 'smlemfdl1',
 	database: 'movie',
 });
 
 //DB 조회 -json으로 변환 10개씩
 var start = 0;
 var offset =28;//item per page
-var refreshoffset = 16;
+var refreshoffset = 32;
 var page = 1;
 exports.index = function(req, res){
-	start = (page-1) * offset;
-		connection.query('SELECT * FROM movie LIMIT ?, ?', [start, offset] , function(err, rows) {
-			res.render('index',{row: rows});
-			start = offset + 1;
-			console.log(start+ '::' + offset);
-		});
+	start =0;
+	res.render('index');
 };
 
 exports.movie = function(req, res){
@@ -124,13 +120,10 @@ exports.login = function(req, res){
 }
 
 exports.userIndex = function(req, res){
-	connection.query('SELECT * FROM movie LIMIT ?, ?', [start, offset] , function(err, rows) {
-		console.log(req.session.username);
+		start =0;
 		res.render('login',{
 			username: req.session.username,
-			row: rows
 		});
-	});
 }
 
 exports.userinfoform = function (req, res) { //좋아요 영화 쿼리
@@ -187,4 +180,10 @@ exports.scroll = function(req, res){
 		console.log(start + '::' + refreshoffset);
 		res.send(data1);
 	});
+}
+exports.imgs = function(req, res){
+
+}
+exports.serach = function(req, res){
+	console.log(req.text());
 }
