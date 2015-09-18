@@ -1,4 +1,9 @@
 .grid
 	#grid-content.row
+		each item in row
+				.grid-item.col-xs-6.col-md-3(class='#{item.genre1 } #{item.year}')
+					a.thumbnail(href='/movie/#{item.url}',data-toggle='modal' data-target='#myModal')
+						img(src='#{item.imgpath}')
+
 
 

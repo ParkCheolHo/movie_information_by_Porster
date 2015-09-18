@@ -70,9 +70,9 @@
                     li.menu-item
                       a(data-filter='*') 전체보기
 
-        form.navbar-form.navbar-left(role='search')
+        form.navbar-form.navbar-left(action='/serach', method='post')
           .form-group
-            input.form-control(type='text', placeholder='Search')
+            input#value.form-control(name ='serachvalue' type='text', placeholder='Search')
           button.btn.btn-default(type='submit') Submit
         ul.nav.navbar-nav.navbar-right
           li
