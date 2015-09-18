@@ -74,7 +74,7 @@ exports.register = function (req, res) {
     connection.query('SELECT * FROM movieinfo WHERE username = ?', info.username, function (err, results) {
         if (results[0] !== undefined) {
             console.log("이미 가입 되어 있습니다.");
-            res.redirect('/register');
+            res.end('false');
         }
         else {
             if (info.password === info.password2) {
