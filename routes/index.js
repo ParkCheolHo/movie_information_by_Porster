@@ -9,6 +9,7 @@ var connection = mysql.createConnection({
 });
 
 //DB 조회 -json으로 변환 10개씩
+var idcheck = false;
 var start = 0;
 var offset = 28;//item per page
 var refreshoffset = 16;
@@ -60,7 +61,30 @@ exports.count = function (req, res) {
         }
     });
 }
+exports.idcheck = function (req, res){
+    var info = {
+        username: req.body.username
+    }
+    connection.query('SELECT * FROM movieinfo WHERE username = ?', info.username, function (err, results) {
+        if(err != null){
+            console.log(info);
+            console.log(err);
+        }
+        if (results[0] !== undefined) {
+            console.log(info);
+            console.log("이미 가입 되어 있습니다.");
+            res.send(500,'false');
+            idcheck = false;
+            console.log(idcheck);
+        }
+        else{
+            res.send('true');
+            idcheck = true;
+            console.log(idcheck);
+        }
+    })
 
+}
 exports.registerForm = function (req, res) {
     res.render('register-form');
 };
@@ -71,29 +95,27 @@ exports.register = function (req, res) {
         password: req.body.password,
         password2: req.body.password2
     }
-    connection.query('SELECT * FROM movieinfo WHERE username = ?', info.username, function (err, results) {
-        if (results[0] !== undefined) {
-            console.log("이미 가입 되어 있습니다.");
-            res.end('false');
+    if(idcheck == true) {
+        if (info.password === info.password2) {
+            //전부 맞을때 sql 입력
+            connection.query('INSERT INTO  movieinfo SET username = ?, password = ?', [info.username, info.password], function (err) {
+                console.log("가입되었습니다. 환영합니다");
+                //exports.index다시 실행될때 변수로 넣기 위해 선언
+                req.session.username = info.username;
+                //index를 다시 띄움
+                res.redirect('/user/' + req.session.username);
+            });
         }
         else {
-            if (info.password === info.password2) {
-                //전부 맞을때 sql 입력
-                connection.query('INSERT INTO  movieinfo SET username = ?, password = ?', [info.username, info.password], function (err) {
-                    console.log("가입되었습니다. 환영합니다");
-                    //exports.index다시 실행될때 변수로 넣기 위해 선언
-                    req.session.username = info.username;
-                    //index를 다시 띄움
-                    res.redirect('/user/' + req.session.username);
-                });
-            }
-            else {
-                //입력 비밀번호가 다를때
-                console.log("비밀번호가 다릅니다.");
-                res.redirect('/register');
-            }
+            //입력 비밀번호가 다를때
+            console.log("비밀번호가 다릅니다.");
+            res.redirect('/register');
+
         }
-    });
+    }
+    else
+    //res.send(500, 'false2')
+    res.redirect('/register');
 };
 
 exports.loginForm = function (req, res) {
@@ -207,6 +229,7 @@ exports.serach = function (req, res) {
         });
     }
 }
+
 function distinction(value) {
     var query = "SELECT * FROM movie WHERE  year = ";
     var valuearray = value.split(' ');

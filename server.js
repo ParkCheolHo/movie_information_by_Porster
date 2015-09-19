@@ -35,6 +35,7 @@ app.get('/', routes.index);
 app.get('/movie/:url', routes.movie);
 app.get('/user/:username/profile', routes.userinfoform);
 
+app.post('/idcheck', routes.idcheck);
 app.get('/register', routes.registerForm);
 app.post('/register', routes.register);
 app.get('/login', routes.loginForm);

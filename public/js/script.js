@@ -80,6 +80,23 @@ $(document).ready(function () {
         return false;
     });
     $(window).scroll(Infinite);
+    $('#test').on("click", function () {
+        $.ajax({
+            type: "post",
+            url: "/idcheck",
+            datatype: 'text',
+            data: {
+                username: $('#username').val()
+            },
+            success: function (data, text) {
+                alert(text);
+            },
+            error: function (error) {
+                if (error.responseText == 'false')
+                    alert("Please enter correct user name and password.")
+            }
+        });
+    });
 });
 
 
