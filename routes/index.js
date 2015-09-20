@@ -5,7 +5,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     user: 'root',
     password: 'smlemfdl1',
-    database: 'movie',
+    database: 'movie2',
 });
 
 //DB 조회 -json으로 변환 10개씩

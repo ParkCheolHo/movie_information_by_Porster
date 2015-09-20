@@ -22,7 +22,7 @@ function scroll() {
             $(data).each(function (index, item) {
 
                 var $test = $("<div class=" + '"grid-item col-xs-6 col-md-3 ' + item.genre1 + ' ' + item.year + '"> ' + '<a href=/movie/' + item.url + ' data-toggle="modal" data-target="#myModal" class="thumbnail"> '
-                    + ' <img src=" ' + item.imgpath + '">' + "</a></div>");
+                    + ' <img src="/img/'+item.year+"/" + item.url + '.jpg">' + "</a></div>");
                 //$container.isotope( 'appended', test );
                 $grid.imagesLoaded(function () {
                     $grid.isotope({});

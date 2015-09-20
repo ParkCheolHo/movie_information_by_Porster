@@ -1,7 +1,7 @@
 body
 	.modal-body
 		.image.thumbnail.col-md-4.col-sm-4.col-xs-4.pull-left
-			img(src='#{row.imgpath}', style='width: 100%; height: auto;')
+			img(src='/img/#{row.year}/#{row.url}.jpg', style='width: 100%; height: auto;')
 		.content.col-md-offset-4.col-sm-offset-4.col-xs-offset-4
 			ul.content
 				li 
@@ -16,5 +16,5 @@ body
 				li 장르: #{row.genre1} #{row.genre2} #{row.genre3} #{row.genre4} #{row.genre5}
 				li 배우: #{row.actor1} #{row.actor2} #{row.actor3} #{row.actor4} #{row.actor5}
 			ul.content
-				li #{row.stroy} 
+				li #{row.story}
 	.modal-footer
