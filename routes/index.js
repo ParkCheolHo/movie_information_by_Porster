@@ -16,7 +16,7 @@ var refreshoffset = 16;
 var page = 1;
 exports.index = function (req, res) {
     start = (page - 1) * offset;
-    connection.query('SELECT * FROM movie LIMIT ?, ?', [start, offset], function (err, rows) {
+    connection.query('SELECT * FROM movie ORDER By rand() LIMIT 32', function (err, rows) {
         res.render('index', {row: rows});
         start = offset + 1;
         console.log(start + '::' + offset);
@@ -203,7 +203,7 @@ exports.is_login = function (req, res) {
 }
 exports.scroll = function (req, res) {
 
-    connection.query('SELECT * FROM movie LIMIT ?, ?', [start, refreshoffset], function (err, data1) {
+    connection.query('SELECT * FROM movie ORDER By rand() LIMIT 32', [start, refreshoffset], function (err, data1) {
         //console.log(data1);
         start += refreshoffset + 1;
         console.log(start + '::' + refreshoffset);
