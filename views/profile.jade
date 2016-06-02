@@ -1,0 +1,17 @@
+//
+   Created by WhiteNight on 2016-05-25.
+
+include layout
+
+    a#menuLink.menu-link(href='#menu')
+        span
+    #menu
+        .pure-menu
+            a.pure-menu-heading(href='/') Movie
+            ul.pure-menu-list
+                li.pure-menu-item.pure-menu-selected
+                    a.pure-menu-link(href='/user/#{name}/profile') #{name} 님
+                li.pure-menu-item
+                    a.pure-menu-link(href='/api/logout') LogOut
+                li.pure-menu-item
+                    a.pure-menu-link(href='#') Contact

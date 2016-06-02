@@ -1,0 +1,46 @@
+//
+   Created by WhiteNight on 2016-05-25.
+.wrapper
+    .header
+        h2 자유게시판
+    .content
+        .table-responsive
+            table.table.table-hover
+                thead
+                    th.first #
+                    th.second 제목
+                    th.three 작성자
+                    th.four 일자
+                    th.five 조회수
+                tbody
+                    each item in result
+                        tr
+                            td #{item.board_index}
+                            td #{item.title}
+                            td #{item.user}
+                            td test
+                            td #{item.viewcount}
+
+        footer
+            .text-center
+                ul.pagination
+                    li
+                        a(href='#', aria-label='Previous')
+                            span(aria-hidden='true') «
+
+                        a(href='#')
+                    li
+                        a(href='#') 1
+                    li
+                        a(href='#') 2
+                    li
+                        a(href='#') 3
+                    li
+                        a(href='#') 4
+                    li
+                        a(href='#') 5
+                    li
+                        a(href='#', aria-label='Next')
+                            span(aria-hidden='true') »
+            a.btn.btn-primary(href='/api/wirte', role='button') 글쓰기
+include script

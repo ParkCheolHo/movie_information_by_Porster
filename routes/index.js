@@ -1,261 +1,239 @@
-//모듈을 추출합니다.
+var express = require('express');
+var router = express.Router();
 var mysql = require('mysql');
-
-//데이터베이스와 연결합니다.
+var app = require('../app');
+var fs = require('fs');
+var passport = require('passport')
+    , LocalStrategy = require('passport-local').Strategy;
 var connection = mysql.createConnection({
+    host: 'localhost',
+    port: 3306,
     user: 'root',
     password: 'smlemfdl1',
-    database: 'movie2',
+    database: 'movie'
 });
 
-//DB 조회 -json으로 변환 10개씩
-var idcheck = false;
-var start = 0;
-var offset = 28;//item per page
-var refreshoffset = 16;
-var page = 1;
-exports.index = function (req, res) {
-    start = (page - 1) * offset;
-    connection.query('SELECT * FROM movie ORDER By rand() LIMIT 32', function (err, rows) {
-        res.render('index', {row: rows});
-        start = offset + 1;
-        console.log(start + '::' + offset);
-    });
-};
 
-exports.movie = function (req, res) {
-    connection.query('SELECT  *  FROM movie WHERE url= ?', [req.params.url], function (err, row) {
-        req.session.url = req.params.url,
-            req.session.moviename = row[0].name;
-        res.render('movie', {row: row[0]});
-        console.log(req.session.moviename);
-    });
-}
-
-exports.count = function (req, res) {
-    connection.query('SELECT username FROM favoritelist WHERE movieurl = ? AND username = ? AND moviename = ?', [req.session.url, req.session.username, req.session.moviename], function (error, data) {
-        if (data[0] !== undefined) {
-            console.log(data)
-            connection.query('DELETE FROM favoritelist WHERE movieurl = ? AND username = ? AND moviename = ?', [req.session.url, req.session.username, req.session.moviename]);
-            connection.query('SELECT like_count FROM movie WHERE url = ?', [req.session.url], function (error, data) {
-                data[0].like_count--;
-                connection.query('UPDATE movie SET like_count = ? WHERE url = ?', [data[0].like_count, req.session.url], function (err) {
-                    res.send(data);
-                });
-            });
-
-        }
-        else {
-            console.log(req.session.url);
-            console.log(req.session.username);
-            console.log(data);
-            connection.query('SELECT like_count FROM movie WHERE url = ?', [req.session.url], function (error, data) {
-                data[0].like_count++;
-                connection.query('UPDATE movie SET like_count = ? WHERE url = ?', [data[0].like_count, req.session.url], function (err) {
-                    res.send(data);
-                });
-            });
-            connection.query('INSERT INTO favoritelist SET username = ? , movieurl = ?, moviename = ?', [req.session.username, req.session.url, req.session.moviename], function (error, data) {
-
-            });
-        }
-    });
-}
-exports.idcheck = function (req, res){
-    var info = {
-        username: req.body.username
+router.use(passport.initialize());
+router.use(passport.session());
+passport.use('local', new LocalStrategy({
+        usernameField: 'id',
+        passwordField: 'password',
+        passReqToCallback: true
     }
-    connection.query('SELECT * FROM movieinfo WHERE username = ?', info.username, function (err, results) {
-        if(err != null){
-            console.log(info);
-            console.log(err);
-        }
-        if (results[0] !== undefined) {
-            console.log(info);
-            console.log("이미 가입 되어 있습니다.");
-            res.send(500,'false');
-            idcheck = false;
-            console.log(idcheck);
-        }
-        else{
-            res.send('true');
-            idcheck = true;
-            console.log(idcheck);
-        }
-    })
-
-}
-exports.registerForm = function (req, res) {
-    res.render('register-form');
-};
-
-exports.register = function (req, res) {
-    var info = {
-        username: req.body.username,
-        password: req.body.password,
-        password2: req.body.password2
-    }
-    if(idcheck == true) {
-        if (info.password === info.password2) {
-            //전부 맞을때 sql 입력
-            connection.query('INSERT INTO  movieinfo SET username = ?, password = ?', [info.username, info.password], function (err) {
-                console.log("가입되었습니다. 환영합니다");
-                //exports.index다시 실행될때 변수로 넣기 위해 선언
-                req.session.username = info.username;
-                //index를 다시 띄움
-                res.redirect('/user/' + req.session.username);
-            });
-        }
-        else {
-            //입력 비밀번호가 다를때
-            console.log("비밀번호가 다릅니다.");
-            res.redirect('/register');
-
-        }
-    }
-    else
-    //res.send(500, 'false2')
-    res.redirect('/register');
-};
-
-exports.loginForm = function (req, res) {
-    res.render('login-form');
-}
-
-
-exports.login = function (req, res) {
-    connection.query('SELECT * FROM movieinfo WHERE username = ?', [req.body.username], function (err, results) {
-        if (results[0] !== undefined) {
-            if (results[0].password === req.body.password) {
-                console.log("로그인 가능합니다.");
-                //exports.index다시 실행될때 변수로 넣기 위해 선언
-                req.session.username = results[0].username;
-                //index를 다시 띄움
-                res.redirect('/user/' + req.session.username);
+    , function (req, id, password, done) {
+        connection.query('select * from users where id = ?', [id], function (err, result) {
+            if (result[0] !== undefined) {
+                if (result[0].password === password) {
+                    var user = {
+                        'id': id,
+                        'password': password
+                    };
+                    console.log("로그인");
+                    return done(null, user);
+                }
+                else {
+                    console.log("비밀번호를 다르게 입력하였습니다.");
+                    return done(null, false);
+                }
             }
             else {
-                console.log("비밀번호를 다르게 입력하였습니다.");
-                res.redirect('/login');
+                console.log("가입되어 있지 않습니다.");
+                return done(null, false);
             }
-        }
-        else {
-            console.log("가입되어 있지 않습니다.");
-            res.redirect('/login');
-        }
-    });
-}
-
-exports.userIndex = function (req, res) {
-    connection.query('SELECT * FROM movie LIMIT ?, ?', [start, offset], function (err, rows) {
-        console.log(req.session.username);
-        res.render('login', {
-            username: req.session.username,
-            row: rows
         });
-    });
-}
+    }
+));
+passport.serializeUser(function (user, done) {
+    console.log('serialize');
+    done(null, user.id);
+});
 
-exports.userinfoform = function (req, res) { //좋아요 영화 쿼리
-    connection.query('SELECT * FROM movieinfo WHERE username = ?', [req.session.username], function (err, data) {
-        console.log(data);
-        connection.query('SELECT * FROM favoritelist WHERE username = ?', [req.session.username], function (err, favorate) {
-            console.log(favorate);
-            res.render('user-info-form', {
-                username: req.session.username,
-                result: favorate
+passport.deserializeUser(function (id, done) {
+    console.log("deserialize");
+    done(null, id);
+
+});
+connection.connect(function (err) {
+    if (err) {
+        console.error('mysql connection error');
+        console.error(err);
+        throw err;
+    }
+});
+
+
+/* GET home page. */
+router.get('/', function (req, res, next) {
+    connection.query('select code from movies order by rand() limit 30', function (err, result) {
+
+        if (req.isAuthenticated()) {
+            res.render('users', {
+                row: result,
+                name: req.session.passport.user
+            });
+
+        } else {
+            res.render('index', {row: result});
+
+        }
+    });
+});
+
+router.get('/api/scroll', function (req, res, next) {
+    connection.query('select code from movies order by rand() limit 30', function (err, result) {
+        res.send(result);
+    });
+});
+
+//로그인
+router.post('/api/login', function (req, res) {
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            console.log("login failed");
+            console.log();
+            return res.status(401).send("posterroor");
+        }
+        req.logIn(user, function (err) {
+            if (err) {
+                return next(err);
+            }
+            console.log("login");
+
+            var test = req.headers.referer;
+            return res.send(test);
+        });
+
+    })(req, res);
+});
+//로그아웃
+router.get('/api/logout', function (req, res) { // 세션 삭제
+    req.logout();
+    res.redirect(req.headers.referer);
+});
+router.post('/api/register', function (req, res, next) {
+    connection.query('insert into users values(?,?,?)', [req.body.id, req.body.email, req.body.password], function (err, result) {
+        passport.authenticate('local', function (err, user, info) {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                console.log("login failed");
+                console.log();
+                return res.status(401).send("posterroor");
+            }
+            req.logIn(user, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                console.log("login");
+                return res.redirect('/');
+            });
+        })(req, res, next);
+
+    })
+});
+router.post('/api/id_check', function (req, res, next) {
+    connection.query('select id from users where id = ? ', [req.body.id], function (err, result) {
+        console.log(result[0]);
+        if (result[0] !== undefined) {
+            res.status(401).send('사용불가');
+        } else {
+            console.log("사용가능");
+            res.send("사용가능");
+        }
+    })
+});
+router.get('/api/wirte', ensureAuthenticated, function (req, res, next) {
+
+    res.render('write', {
+        name: req.session.passport.user
+    })
+})
+router.post('/api/write', ensureAuthenticated, function (req, res, next) {
+
+    connection.query('INSERT INTO movie.movie_board (user, title, content) VALUES (?,?,?)', [req.session.passport.user,
+        req.body.title, req.body.content], function (err, result) {
+        console.log(req.headers.referer);
+        res.send('http://' + req.headers.host + '/board');
+    })
+})
+router.get('/movie/:url', function (req, res, next) {
+    // 이미지가 있는지 체크 하고 보낸다.
+    connection.query('SELECT code,name, engname, storyname, story,year,grade_name, contry_name FROM movie.movies INNER JOIN  movie.grade on movies.grade = grade.grade_index INNER JOIN  movie.contry on movies.contry_id = contry.contry_index where code = ?', [req.params.url], function (err, movie) {
+        connection.query('select * from actors where code in (SELECT actors_index FROM movie.relrationship_actor INNER JOIN  movie.movies on movies.code = relrationship_actor.movie_index where movie_index = ?)', [req.params.url], function (err, actors) {
+            for (var m in actors) {
+                // console.log(test[m].code);
+                var path = 'public\\images\\Actors\\' + actors[m].code + '.jpg';
+                // console.log(path);
+                try {
+                    fs.accessSync(path, fs.F_OK);
+                    // Do something
+                    // console.log(actors[m].code+' : 접근가능');
+                } catch (e) {
+                    // console.log(actors[m].code+' : 접근불가');
+                    actors[m].code = '0000';
+                    // It isn't accessible
+                }
+            }
+
+            res.render('movie', {
+                row: movie[0],
+                actors: actors
             });
         });
     });
-}
+});
 
-exports.change = function (req, res) {
-    var data = req.session.username;
-    if (req.body.confirm === req.body.new) {
-        connection.query('UPDATE movieinfo SET password = ? WHERE username = ?', [req.body.new, data]);
-        console.log("비밀번호 변경 완료");
-        res.redirect('/user/' + data + '/profile');
-    }
-    else {
-        console.log("변경 하고자 하는 비밀번호가 맞지 않습니다.");
-        res.redirect('/user/' + data + '/profile');
-    }
-};
 
-exports.withdrawal = function (req, res) {
-    var data = req.session.username;
-    connection.query('DELETE from movieinfo WHERE username = ?', data, function (err) {
-        res.redirect('/');
+router.get('/session', function (req, res) { // 세션 보기
+    console.log(req.session);
+    res.send('user : ' + req.session.passport.user);
+});
+router.get('/user/:url/profile', ensureAuthenticated, function (req, res, next) {
+    res.render('profile', {
+        name: req.session.passport.user
     });
-}
-
-exports.logout = function (req, res) {
-    console.log('로그아웃');
-    req.session.destroy(function () {
-        res.redirect('/');
-    });
-
-}
-exports.is_login = function (req, res) {
-    connection.query('SELECT * FROM movieinfo WHERE username = ?', [req.session.username], function (err, data) {
-        console.log(data);
-        res.send(data)
-    });
-}
-exports.scroll = function (req, res) {
-
-    connection.query('SELECT * FROM movie ORDER By rand() LIMIT 32', [start, refreshoffset], function (err, data1) {
-        //console.log(data1);
-        start += refreshoffset + 1;
-        console.log(start + '::' + refreshoffset);
-        res.send(data1);
-    });
-}
-exports.serach = function (req, res) {
-    var distinctionvalue = req.body.serachvalue;
-    var signature = distinctionvalue.substring(0,1);
-    console.log(signature);
-    if(signature == ":"){
-        var data = distinction(req.body.serachvalue);
-        connection.query(data, function (err, data1) {
-            console.log(data1);
-            res.render('index', {row: data1});
-        });
-    }
-    else {
-        var querystring = "%"+distinctionvalue+"%";
-        connection.query('SELECT * FROM movie WHERE  name LIKE ?', [querystring], function (err, data1) {
-            console.log(data1);
-            res.render('index', {row: data1});
-        });
-    }
-}
-
-function distinction(value) {
-    var query = "SELECT * FROM movie WHERE  year = ";
-    var valuearray = value.split(' ');
-    var year = valuearray[0].substring(1, 5);
-    query += year;
-    if(valuearray[1] != null) {
-        var genre = valuearray[1].split(',');
-
-        if (genre != null)
-            query += ' and ';
-
-        console.log(genre[0]);
-
-
-        for (var i = 0; i < genre.length; i++) {
-            if (i > 0) {
-                query += ' or ';
+})
+router.get('/board', function (req, res, next) {
+    connection.query('select count("board_index") as boardcount from movie_board', function (err, result) {
+        connection.query('SELECT  board_index, user, title, time, viewcount from movie_board ORDER BY board_index desc limit 0,10', function (err, result) {
+            console.log(result[0].boardcount);
+            var pagenum = parseInt(result[0].boardcount / 20);
+            var lestpage = result[0].boardcount % 20;
+            if (pagenum > 10) {
+                pagenum = 10;
+            } else {
+                if (lestpage > 0)
+                    pagenum += 1;
             }
-            query += "genre1 ='" + genre[i] + "'";
-        }
+            console.log(pagenum);
+
+            if (req.isAuthenticated()) {
+                res.render('freeboard', {
+                    name: req.session.passport.user,
+                    page: pagenum,
+                    result : result
+                })
+            } else {
+                res.render('freeboard', {
+                    page: pagenum,
+                    result: result
+                });
+            }
+        })
+    })
+})
+
+module.exports = router;
+function ensureAuthenticated(req, res, next) {
+    // 로그인이 되어 있으면, 다음 파이프라인으로 진행
+    if (req.isAuthenticated()) {
+        return next();
     }
-    console.log(query);
-    return query;
+    // 로그인이 안되어 있으면, login 페이지로 진행
+    res.redirect(req.headers.referer);
 }
-
-
-
-
-

@@ -1,20 +1,26 @@
-body
-	.modal-body
-		.image.thumbnail.col-md-4.col-sm-4.col-xs-4.pull-left
-			img(src='/img/#{row.year}/#{row.url}.jpg', style='width: 100%; height: auto;')
-		.content.col-md-offset-4.col-sm-offset-4.col-xs-offset-4
-			ul.content
-				li 
-					.title
-						h3
-							b #{row.name} (#{row.year})
-					.test.pull-right
-						a.like(href='#' id = '#{row.url}')
-							span.glyphicon.glyphicon-thumbs-up
-						a.like_count(href='#' id = '#{row.url}') #{row.like_count}
-				li 감독: #{row.director}
-				li 장르: #{row.genre1} #{row.genre2} #{row.genre3} #{row.genre4} #{row.genre5}
-				li 배우: #{row.actor1} #{row.actor2} #{row.actor3} #{row.actor4} #{row.actor5}
-			ul.content
-				li #{row.story}
-	.modal-footer
+.modal-header
+    button.close(type='button', data-dismiss='modal', aria-label='Close')
+        span(aria-hidden='true') ×
+    h4#myModalLabel.modal-title Movie Information
+    .modal-body
+        .container-fluid
+            .row
+                h2 #{row.name}
+                .col-md-8
+
+                    h4 제작년도 : (#{row.year})
+                    h4 등급 : #{row.grade_name}
+                    h4 국가 : #{row.contry_name}
+                .col-md-4
+                    a.thumbnail
+                        img(src="/images/Poster/#{row.code}.jpg")
+            .row
+                .actors
+                  each item in actors
+                      .actor.col-md-2.col-xs-6.col-sm-6
+                          a.thumbnail
+                               img(src="/images/Actors/#{item.code}.jpg")
+                             h6 #{item.name}
+    .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Close
+

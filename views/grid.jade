@@ -1,9 +1,16 @@
-.grid
-	#grid-content.row
-		each item in row
-				.grid-item.col-xs-6.col-md-3(class='#{item.genre1 } #{item.year}')
-					a.thumbnail(href='/movie/#{item.url}',data-toggle='modal' data-target='#myModal')
-						img(src='/img/#{item.year}/#{item.url}.jpg')
+//
+   Created by WhiteNight on 2016-05-18.
 
+.wrapper
+    .header
+        h1 Page Title
+        h2 A subtitle for your page goes here
+    .grid#grid
+        each item in row
+            .item
+                a.thumbnail(href='/movie/#{item.code}' data-toggle="modal" data-target="#movieModal")
+                    img(src="/images/Poster/#{item.code}.jpg")
+.readmore
+    button#myButton.btn.btn-primary(type='button', data-loading-text='Loading...', autocomplete='off') Lead More
 
-
+include script
