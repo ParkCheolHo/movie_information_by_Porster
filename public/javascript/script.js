@@ -216,25 +216,6 @@ $(document).ready(function () {
             alert("비밀번호가 서로 맞지 않습니다.");
         }
     });
-    $('#write-form').on('submit', function(e){
-        e.preventDefault();
-        var $btn = $('#writesubmitbtn').button('loading')
-        var writedata ={
-            title : $('#title').val(),
-            content : $('#comment').val()
-        }
-        $.ajax({
-            type: "POST",
-            url: "/api/write",
-            cache: false,
-            data: writedata,
-            success: function(data){
-                alert(data)
-                alert("글쓰기 완료 되었습니다.")
-                window.location.replace(data);
-            },
-            error: onError
-        });
-    })
+    
 });
 

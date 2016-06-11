@@ -1,0 +1,72 @@
+//
+   Created by WhiteNight on 2016-05-25.
+
+style(type='text/css').
+    tr td a p {
+        margin-bottom: 0px;
+    }
+
+.wrapper
+    .header
+        h2 자유게시판
+    .content
+        .table-responsive
+            table.table.table-hover
+                thead
+                    th.first #
+                    th.second 제목
+                    th.three 작성자
+                    th.four 일자
+                    th.five 조회수
+                tbody
+                    each item in result
+                        tr
+                            td #{item.board_index}
+                            td.second
+                                a(href='/board/#{item.board_index}')
+                                    p #{item.title}
+                            td #{item.user}
+                            td test
+                            td #{item.viewcount}
+
+        footer
+            .text-center
+                ul.pagination
+                    if(now_page == 1)
+                        li(class ='disabled')
+                            a( href='#', aria-label='Previous')
+                                span(aria-hidden='true') «
+                    else
+                        li
+                            - var previous = now_page - 1
+                            a( href='/board/view?page=#{previous}', aria-label='Previous')
+                                span(aria-hidden='true') «
+                    if(start_page > 1)
+                        li
+                            a(href='/board/view?page=1') 1
+                        li(class='disabled')
+                            span ...
+                    - for (var i = start_page; i < start_page + offset ; i++)
+                            if(i == now_page)
+                                li(class='active')
+                                    a= i
+                            else
+                                li
+                                    a(href='/board/view?page=' + i)= i
+                    if((end_page_num-offset) >= start_page)
+                        li(class='disabled')
+                            span ...
+                        li
+                            a(href='/board/view?page=#{end_page_num}') #{end_page_num}
+                    if(now_page == end_page_num)
+                        li(class ='disabled')
+                            a(aria-label='Next')
+                             span(aria-hidden='true') »
+                    else
+                        li
+                            - var next = ++now_page
+                            a(href='/board/view?page=#{next}', aria-label='Next')
+                                span(aria-hidden='true') »
+                 a.btn.pull-right.btn-primary(href='/api/write', role='button') 글쓰기
+
+include ../../script

@@ -1,0 +1,33 @@
+//
+   Created by WhiteNight on 2016-05-27.
+
+style(type='text/css').
+    #write {
+        padding-top: 20px;
+        margin-right: 15px;
+    }
+
+
+.wrapper#write
+    .header
+            if(content)
+                form(action='/board/#{content.board_index}', method='post')
+                    .form-group
+                        input#title.form-control(name ='title' type='text', placeholder='제목' required='제목을 입력하세요' value='#{content.title}' cvrqerrmsg='제목이 필요합니다.')
+                    br
+                    .form-group
+                        textarea#comment.form-control(name = 'content' rows='30' required=''  cvrqerrmsg='내용이 필요합니다.') #{content.content}
+                    button.btn.btn-primary(type='submit') 수정
+            else
+                form(name='user', method='post', action='/api/write')
+                    .form-group
+                        input#title.form-control(name='title' type='text', placeholder='제목' required='제목을 입력하세요' cvrqerrmsg='제목이 필요합니다.')
+                    br
+                    .form-group
+                        textarea#comment.form-control(name='content' rows='30' required='' cvrqerrmsg='내용이 필요합니다.')
+                    button.btn.btn-primary(type='submit')#writesubmitbtn 등록
+
+
+
+
+include ../../script

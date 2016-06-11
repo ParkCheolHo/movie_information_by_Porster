@@ -1,0 +1,16 @@
+//
+   Created by WhiteNight on 2016-06-07.
+
+extends ../layout
+
+
+block content
+
+    if name
+        #layout
+            include ../nav/usernav
+            include forms/watch_form
+    else
+        #layout
+            include ../nav/nav
+            include forms/watch_form

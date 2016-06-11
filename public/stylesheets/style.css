@@ -1,23 +1,29 @@
 table {
     border : 1px solid #dddddd;
+    text-align: center;
 }
 table thead{
     background-color: #dddddd;
 }
 th.first {
     width: 5%;
+    text-align: center;
 }
-th.second {
+.second {
     width: 60%;
+    text-align: left;
 }
 th.three {
     width: 10%;
+    text-align: center;
 }
 th.four {
     width: 15%;
+    text-align: center;
 }
 th.five {
     width: 10%;
+    text-align: center;
 }
 .actor a{
     margin : 3px;
