@@ -21,6 +21,10 @@
 ![Alt text](https://raw.githubusercontent.com/ParkCheolHo/movie_information_by_Porster/master/img/screenshot/main.png)
 <p style="text-align:center">메인 화면</p>
 
+### 영화 페이지
+![Alt text](https://raw.githubusercontent.com/ParkCheolHo/movie_information_by_Porster/master/img/screenshot/open_movie_modal.png)
+<p style="text-align:center">개별 영화 페이지</p>
+
 ### 데이터 베이스 er다이어그램
 ![Alt text](https://raw.githubusercontent.com/ParkCheolHo/movie_information_by_Porster/master/img/screenshot/test.png)
 <p style="text-align:center">er다이어그램</p>
