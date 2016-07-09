@@ -1,17 +1,17 @@
 //
    Created by WhiteNight on 2016-06-07
 
-.wrapper
+#page-content-wrapper
     .header
         h4 자유게시판
     .content-body
         .page-header
-            h2 #{content.title}
+            h2 #{content.board_title}
 
-        p #{content.content}
+        p #{content.board_content}
 
     .footer
-        if(content.user == name)
+       if(content.board_user == name)
             form(action='/board/delete/#{content.board_index}?_method=delete' method='post')
                 button.btn.pull-right.btn-primary(href = type='button' onclick="return confirm('정말 삭제 하시겠습니까?');") 삭제
             a.btn.pull-right.btn-primary(href='/board/#{content.board_index}/edit' type='button') 수정

@@ -3,7 +3,13 @@ function scroll() {
         type: "GET",
         url: "/api/scroll",
         dataType: "json",
-        success: function (data) {
+        success: isotopeadd
+    });
+}
+function test(data){
+    alert(data);
+}
+function isotopeadd (data) {
             var $grid = $('.grid').isotope();
             $(data).each(function (index, item) {
                 var div = document.createElement('div');
@@ -14,7 +20,7 @@ function scroll() {
                 a.setAttribute('data-toggle', 'modal');
                 a.setAttribute('data-target', '#movieModal');
                 a.href = "/movie/" + item.code;
-                img.src = "/images/Poster/" + item.code + ".jpg";
+                img.src = "/images/movie/Poster/" + item.code + ".jpg";
                 div.appendChild(a);
                 a.appendChild(img);
                 $grid.append(div).isotope('appended', div);
@@ -23,52 +29,61 @@ function scroll() {
                     $grid.isotope({});
                 });
             });
+         }
 
-        }
-    });
+function search_success(data){
+    var $grid = $('.grid').isotope();
+    var elems = $grid.isotope('getItemElements')
+    $grid.isotope( 'remove', elems ).isotope('layout');
+    isotopeadd(data);
+    alert("검색 완료");
+}
+function search_error(data){
+    alert("검색 결과가 없습니다.");
+    
 }
 
+    function changepassword(){
+        alert("비밀번호 변경 성공")
+        $('#change_password_modal').modal('hide')
+    }
+    function changepassword_error(){
+        alert("현재 비밀번호가 맞지 않습니다.")
+    }
+    
 $(document).ready(function () {
     $('#movieModal').on('hidden.bs.modal', function () {
-        $(this).removeData('bs.modal')
+        $(this).removeData('bs.modal').find(".modal-content").empty();
     });
-
     var $grid = $('#grid').imagesLoaded(function () {
         // init Isotope after all images have loaded
         $grid.isotope({
             itemSelector: '.item'
         });
     });
-    var layout = document.getElementById('layout'),
-        menu = document.getElementById('menu'),
-        menuLink = document.getElementById('menuLink');
-
-    function toggleClass(element, className) {
-        var classes = element.className.split(/\s+/),
-            length = classes.length,
-            i = 0;
-        for (; i < length; i++) {
-            if (classes[i] === className) {
-                classes.splice(i, 1);
-                break;
-            }
+    
+     $('#myButton').on("click", function () {
+         scroll();
+     })
+     $('#search').on("click", function () {
+        var search_val = document.getElementById("search_input").value;
+        var check = search_val.split(" ");
+        if(check.length < 5){
+         var formData = ({
+            data: search_val
+        });
+        $.ajax({
+            type: "GET",
+            url: "/api/search",
+            cache: false,
+            dataType: "json",
+            data: formData,
+            success: search_success,
+            error: search_error
+        });
+        }else{
+            alert("검색어가 너무 길어요");
         }
-        // The className is not found
-        if (length === classes.length) {
-            classes.push(className);
-        }
-        element.className = classes.join(' ');
-    }
-
-    menuLink.onclick = function (e) {
-        var active = 'active';
-        e.preventDefault();
-        toggleClass(layout, active);
-        toggleClass(menu, active);
-        toggleClass(menuLink, active);
-    };
-    $('#myButton').on("click", function () {
-        scroll();
     });
     $("#login-form").keydown(function (e) {
         if (e.keyCode == 13) {
@@ -95,14 +110,7 @@ $(document).ready(function () {
             error: onError
         });
     });
-    function onSuccess(data, textStatus, jqXHR) {
-        window.location.replace(data);
-    }
-
-    function onError(data, status) {
-        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", " id or password wrong");
-    }
-
+   
     var $formLogin = $('#login-form');
     var $formLost = $('#lost-form');
     var $formRegister = $('#register-form');
@@ -128,37 +136,7 @@ $(document).ready(function () {
     $('#register_lost_btn').click(function () {
         modalAnimate($formRegister, $formLost);
     });
-    function modalAnimate($oldForm, $newForm) {
-        var $oldH = $oldForm.height();
-        var $newH = $newForm.height();
-        $divForms.css("height", $oldH);
-        $oldForm.fadeToggle($modalAnimateTime, function () {
-            $divForms.animate({height: $newH}, $modalAnimateTime, function () {
-                $newForm.fadeToggle($modalAnimateTime);
-            });
-        });
-    }
-
-    function msgFade($msgId, $msgText) {
-        $msgId.fadeOut($msgAnimateTime, function () {
-            $(this).text($msgText).fadeIn($msgAnimateTime);
-        });
-    }
-
-    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText) {
-        var $msgOld = $divTag.text();
-        msgFade($textTag, $msgText);
-        $divTag.addClass($divClass);
-        $iconTag.removeClass("glyphicon-chevron-right");
-        $iconTag.addClass($iconClass + " " + $divClass);
-        setTimeout(function () {
-            msgFade($textTag, $msgOld);
-            $divTag.removeClass($divClass);
-            $iconTag.addClass("glyphicon-chevron-right");
-            $iconTag.removeClass($iconClass + " " + $divClass);
-        }, $msgShowTime);
-    }
-
+    
     var checkAjaxSetTimeout;
     
     $('#register_username').keyup(function () {
@@ -189,6 +167,8 @@ $(document).ready(function () {
         },1000);
     })
 
+
+
     $('#register-form').on('submit', function (e) {
         e.preventDefault();
         var $re_username = $('#register_username').val();
@@ -210,12 +190,91 @@ $(document).ready(function () {
                 cache: false,
                 data: formData,
                 success: onSuccess,
-                error: onError
+                error: onRegesterError
             });
         }else{
             alert("비밀번호가 서로 맞지 않습니다.");
         }
     });
     
+    
+    $('#lost_password-form').on('submit', function (e) {
+        e.preventDefault();
+        var $current = $('#lost_password-form_input').val();
+        var $change = $('#lost_password-form_input1').val(); 
+        var $change_again = $('#lost_password-form_input2').val();
+        var formData = {
+            current: $current,
+            change: $change,
+            change_again: $change_again
+        };
+        if($change === $change_again){
+            $.ajax({
+                type: "POST",
+                url: "/api/changePassword",
+                cache: false,
+                data: formData,
+                success: changepassword,
+                error: changepassword_error
+            });
+        }else{
+            alert("새 비밀번호가 서로 맞지 않습니다.");
+        }
+    });
+function modalAnimate($oldForm, $newForm) {
+        var $oldH = $oldForm.height();
+        var $newH = $newForm.height();
+        $divForms.css("height", $oldH);
+        $oldForm.fadeToggle($modalAnimateTime, function () {
+            $divForms.animate({height: $newH}, $modalAnimateTime, function () {
+                $newForm.fadeToggle($modalAnimateTime);
+            });
+        });
+    }
+
+    function msgFade($msgId, $msgText) {
+        $msgId.fadeOut($msgAnimateTime, function () {
+            $(this).text($msgText).fadeIn($msgAnimateTime);
+        });
+    }
+
+    function msgChange($divTag, $iconTag, $textTag, $divClass, $iconClass, $msgText) {
+        var $msgOld = $divTag.text();
+        msgFade($textTag, $msgText);
+        $divTag.addClass($divClass);
+        $iconTag.removeClass("glyphicon-chevron-right");
+        $iconTag.addClass($iconClass + " " + $divClass);
+        setTimeout(function () {
+            msgFade($textTag, $msgOld);
+            $divTag.removeClass($divClass);
+            $iconTag.addClass("glyphicon-chevron-right");
+            $iconTag.removeClass($iconClass + " " + $divClass);
+        }, $msgShowTime);
+    }
+    function onSuccess(data, textStatus, jqXHR) {
+        window.location.replace(data);
+    }
+    function onRegesterError(data, status) {
+        msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "error", "glyphicon-remove", "e메일주소가 이미 사용 중 입니다.");
+    }
+    function onError(data, status) {
+        msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", " id or password wrong");
+    }
+     function toggleClass(element, className) {
+        var classes = element.className.split(/\s+/),
+            length = classes.length,
+            i = 0;
+        for (; i < length; i++) {
+            if (classes[i] === className) {
+                classes.splice(i, 1);
+                break;
+            }
+        }
+        // The className is not found
+        if (length === classes.length) {
+            classes.push(className);
+        }
+        element.className = classes.join(' ');
+    }
 });
 

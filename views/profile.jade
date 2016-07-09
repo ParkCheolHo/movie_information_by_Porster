@@ -1,17 +1,53 @@
 //
    Created by WhiteNight on 2016-05-25.
-
+style(type='text/css').
+    .modal-content {
+        padding: 20px; 
+    }
+    #lost_password_header{
+         text-align: center;
+    }
 include layout
 
-    a#menuLink.menu-link(href='#menu')
-        span
-    #menu
-        .pure-menu
-            a.pure-menu-heading(href='/') Movie
-            ul.pure-menu-list
-                li.pure-menu-item.pure-menu-selected
-                    a.pure-menu-link(href='/user/#{name}/profile') #{name} 님
-                li.pure-menu-item
-                    a.pure-menu-link(href='/api/logout') LogOut
-                li.pure-menu-item
-                    a.pure-menu-link(href='#') Contact
+#layout
+    #change_password_modal.modal.fade.bs-example-modal-sm(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel', aria-hidden='true')
+      .modal-dialog.modal-sm
+        .modal-content
+            .page-header
+                h2()#lost_password_header 비밀번호 변경
+            
+            form#lost_password-form( method='post')
+                    .form-group
+                        label(for='#lost_password-form_input') 현재 비밀번호
+                        input#lost_password-form_input.form-control(name = 'current' type='password', placeholder='현재 비밀번호')
+                    .form-group
+                        label(for='#lost_password-form_input1') 새 비밀번호
+                        input#lost_password-form_input1.form-control(name = 'new1' type='password', placeholder='새 비밀번호')
+                    .form-group
+                        label(for='#lost_password-form_input2') 새 비밀번호 확인
+                        input#lost_password-form_input2.form-control(name = 'new2' type='password', placeholder='새 비밀번호 확인')
+                    button.btn.btn-primary(type='submit') 변경하기    
+
+    .modal.fade.delete-modal(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel', aria-hidden='true')
+      .modal-dialog.modal-sm
+        .modal-content
+            .page-header        
+                h2 계정 삭제         
+            form#delete-account-form(action='/api/deleteAccount', method='post')  
+                .form-group
+                    label(for='#delete-account-form_input') 현재 비밀번호
+                    input#delete-account-form_input.form-control(name = 'current' type='password', placeholder='비밀번호')  
+                button.btn.btn-danger(type='submit') 삭제하기            
+                      
+    include nav/usernav
+    #page-content-wrapper
+            .page-header
+                h2 사용자 정보             
+            .article
+                button.btn.btn-warning(data-toggle="modal" data-target=".bs-example-modal-sm") 비밀번호 변경
+                &nbsp&nbsp
+                button.btn.btn-danger(data-toggle="modal" data-target=".delete-modal")  아이디 삭제
+            .page-header
+                h2 영화 관리 
+
+include script            

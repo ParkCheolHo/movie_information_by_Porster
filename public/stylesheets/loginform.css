@@ -103,9 +103,7 @@
     margin-bottom: 0px;
 }
 
-.btn {
-    border-radius: 0px;
-}
+
 
 .btn:focus,
 .btn:active:focus,
@@ -116,9 +114,7 @@
     outline: none;
 }
 
-.btn-lg, .btn-group-lg>.btn {
-    border-radius: 0px;
-}
+
 
 .btn-link {
     padding: 5px 10px 0px 0px;
@@ -134,6 +130,4 @@
     top: 0px;
 }
 
-.form-control {
-    border-radius: 0px;
-}
+
