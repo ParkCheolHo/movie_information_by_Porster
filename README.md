@@ -9,7 +9,6 @@
 ### 현재 사용 가능한 기능
     * 회원가입
     * 로그인()
-    * 회원가입
     * 글쓰기(수정, 삭제 가능)
     * 영화 상세정보 보기
 
@@ -18,6 +17,9 @@
     * 내가 쓴 글 트래킹    
     * 아이디, 비밀번호 찾기
     * 게시판 댓글 기능
+### 메인화면
+![Alt text](https://raw.githubusercontent.com/ParkCheolHo/movie_information_by_Porster/master/img/screenshot/main.png)
+<p style="text-align:center">메인 화면</p>
 
 ### 데이터 베이스 er다이어그램
 ![Alt text](https://raw.githubusercontent.com/ParkCheolHo/movie_information_by_Porster/master/img/screenshot/test.png)
