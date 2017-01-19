@@ -16,10 +16,10 @@ function isotopeadd (data) {
                 var a = document.createElement('a');
                 var img = document.createElement('img');
                 div.className = "item";
-                a.className = "thumbnail";
+                a.className = "movie thumbnail";
                 a.setAttribute('data-toggle', 'modal');
-                a.setAttribute('data-target', '#movieModal');
-                a.href = "/movie/" + item.code;
+                a.setAttribute('data-target', '#myModal');
+                a.setAttribute('code', item.code);
                 img.src = "/images/movie/Poster/" + item.code + ".jpg";
                 div.appendChild(a);
                 a.appendChild(img);
@@ -40,7 +40,7 @@ function search_success(data){
 }
 function search_error(data){
     alert("검색 결과가 없습니다.");
-    
+
 }
 
     function changepassword(){
@@ -50,18 +50,31 @@ function search_error(data){
     function changepassword_error(){
         alert("현재 비밀번호가 맞지 않습니다.")
     }
-    
+
 $(document).ready(function () {
-    $('#movieModal').on('hidden.bs.modal', function () {
-        $(this).removeData('bs.modal').find(".modal-content").empty();
-    });
+
+    $('#myModal').on('hidden.bs.modal', function (e) {
+      deleteAllModalContent();
+    })
+
+    $('#grid').on("click",'.movie', function () {
+      var code = this.getAttribute("code");
+      $.ajax({
+        type: "GET",
+        url: "/movie/"+code,
+        success: function(result) {
+          // console.log(result);
+          setModal(result);
+        }
+      })
+    })
     var $grid = $('#grid').imagesLoaded(function () {
         // init Isotope after all images have loaded
         $grid.isotope({
             itemSelector: '.item'
         });
     });
-    
+
      $('#myButton').on("click", function () {
          scroll();
      })
@@ -92,7 +105,7 @@ $(document).ready(function () {
             return false;
         }
     });
-    
+
     $('#login-form').on('submit', function(e){
         e.preventDefault();
         var $lg_username = $('#login_username').val();
@@ -110,7 +123,7 @@ $(document).ready(function () {
             error: onError
         });
     });
-   
+
     var $formLogin = $('#login-form');
     var $formLost = $('#lost-form');
     var $formRegister = $('#register-form');
@@ -136,9 +149,9 @@ $(document).ready(function () {
     $('#register_lost_btn').click(function () {
         modalAnimate($formRegister, $formLost);
     });
-    
+
     var checkAjaxSetTimeout;
-    
+
     $('#register_username').keyup(function () {
         clearTimeout(checkAjaxSetTimeout);
         checkAjaxSetTimeout = setTimeout(function () {
@@ -196,12 +209,12 @@ $(document).ready(function () {
             alert("비밀번호가 서로 맞지 않습니다.");
         }
     });
-    
-    
+
+
     $('#lost_password-form').on('submit', function (e) {
         e.preventDefault();
         var $current = $('#lost_password-form_input').val();
-        var $change = $('#lost_password-form_input1').val(); 
+        var $change = $('#lost_password-form_input1').val();
         var $change_again = $('#lost_password-form_input2').val();
         var formData = {
             current: $current,
@@ -277,4 +290,48 @@ function modalAnimate($oldForm, $newForm) {
         element.className = classes.join(' ');
     }
 });
+function setModal(result) {
+  var movieInfo = result[0][0];
+  var genrelist = result[2];
+  $('#header').append('<h2>'+movieInfo.name+'</h2>');
+  $('#header').append('<h5>'+movieInfo.engname+'</h5>');
+  $.each(result[1], function(index, value){
+    var actor = $("<div class='col-md-4 col-xs-6'></div>");
+    if(value.has_picture){
+      actor.append("<a class='thumbnail actorimg' ><img src=/images/movie/Actors/"+value.code+".jpg></a>");
+    }
+    else {
+      actor.append("<a class='thumbnail actorimg' ><img src=/images/movie/unknown.jpg></a>");
+    }
+    actor.append("<h6 style='text-align: center'>" + value.name + "</h6>");
+    $('#movieActorsContainer').append(actor);
+  })
 
+  var genre = "";
+  $.each(genrelist, function(index, value) {
+    if(index != 0){
+      genre = genre + ", ";
+    }
+     genre = genre + value.genre;
+  })
+  $('#moviePosterContainer').append("<a class='thumbnail' ><img src=/images/movie/Poster/"+movieInfo.code+".jpg></a>")
+  $('#movieInformationArea').append("<div class='col-md-12'>country : "+ movieInfo.country +"</div>")
+  $('#movieInformationArea').append("<div class='col-md-12'>상영시간 : "+ movieInfo.running_time +"</div>")
+  $('#movieInformationArea').append("<div class='col-md-12'>grade : "+ movieInfo.grade +"</div>")
+  $('#movieInformationArea').append("<div class='col-md-12'>genre : "+ genre +"</div>")
+  // if(movieInfo.open_date){
+  //   console.log(movieInfo.open_date);
+  //   $('#movieInformationArea').append("<div class='col-md-12'>개봉일자 : "+ movieInfo.opne_date +"</div>")
+  // }
+  $('#movieInformationArea').append("<div class='col-md-12'>"+ movieInfo.storyname +"</div>")
+  $('#movieInformationArea').append("<div class='col-md-12'>"+ movieInfo.story +"</div>")
+
+
+
+}
+function deleteAllModalContent() {
+  $('#header').empty();
+  $('#movieActorsContainer').empty();
+  $('#moviePosterContainer').empty();
+  $('#movieInformationArea').empty();
+}

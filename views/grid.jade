@@ -15,7 +15,7 @@
     .grid#grid
         each item in row
             .item
-                a.thumbnail(href='/movie/#{item.code}' data-toggle="modal" data-target="#movieModal")
+                a.thumbnail.movie(code="#{item.code}" data-toggle="modal" data-target="#myModal")
                     img(src="/images/movie/Poster/#{item.code}.jpg")
     #readmore
         button#myButton.btn.btn-primary(type='button', data-loading-text='Loading...', autocomplete='off') Read More

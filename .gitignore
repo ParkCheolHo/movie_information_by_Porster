@@ -1,4 +1,7 @@
 
+
+
+
 # Created by https://www.gitignore.io/api/node.,node,intellij
 
 #!! ERROR: node. is undefined. Use list command to see defined gitignore types !!#
@@ -8,6 +11,8 @@
 logs
 *.log
 npm-debug.log*
+
+public/images
 
 # Runtime data
 pids
@@ -98,5 +103,5 @@ fabric.properties
 
 # *.iml
 # modules.xml
-# .idea/misc.xml 
+# .idea/misc.xml
 # *.ipr

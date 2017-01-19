@@ -98,7 +98,9 @@ th.five {
         padding: 1px;
     }
 }
-
+.actorimg {
+  margin-bottom: 1rem !important;
+}
 #layout {
     max-width: 1200px;
     margin : 0 auto;
@@ -107,4 +109,3 @@ th.five {
 #page-content-wrapper{
     margin: 20px;
 }
-

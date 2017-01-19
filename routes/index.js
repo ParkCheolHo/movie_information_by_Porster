@@ -1,3 +1,12 @@
+var db = require('knex')({
+  client: 'mysql',
+  connection: {
+    host : '127.0.0.1',
+    user : 'root',
+    password : '',
+    database : 'movies'
+  }
+});
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
@@ -7,32 +16,37 @@ var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
 var connection;
 var db_config = {
-    host: 'us-cdbr-iron-east-04.cleardb.net',
+    // host: 'us-cdbr-iron-east-04.cleardb.net',
+    // port: 3306,
+    // user: 'b2dad284808da0',
+    // password: '9a1637ecf2b5c8d',
+    // // host : 'localhost',
+    // // port : 3306,
+    // // user : 'root',
+    // // password : 'smlemfdl12~',
+    // database: 'heroku_7af29d928daec7e'
+    host: '127.0.0.1',
     port: 3306,
-    user: 'b2dad284808da0',
-    password: '9a1637ecf2b5c8d',
-    // host : 'localhost',
-    // port : 3306,
-    // user : 'root',
-    // password : 'smlemfdl12~',
-    database: 'heroku_7af29d928daec7e' 
+    user: 'root',
+    password: '',
+    database: 'movies'
 };
 
 function handleDisconnect() {
-  connection = mysql.createConnection(db_config); 
-  connection.connect(function(err) {              
-    if(err) {                                     
+  connection = mysql.createConnection(db_config);
+  connection.connect(function(err) {
+    if(err) {
       console.log('error when connecting to db:', err);
-      setTimeout(handleDisconnect, 2000); 
-    }                                     
-  });                                     
-                                          
+      setTimeout(handleDisconnect, 2000);
+    }
+  });
+
   connection.on('error', function(err) {
     console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
-      handleDisconnect();                         
-    } else {                                      
-      throw err;                                  
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
     }
   });
 }
@@ -129,7 +143,7 @@ router.get('/api/logout', function (req, res) { // 세션 삭제
     res.redirect(req.headers.referer);
 });
 router.post('/api/register', function (req, res, next) {
-    
+
     connection.query('insert into users(id,email,password,time) values(?,?,?,now())', [req.body.id, req.body.email, req.body.password], function (err, result) {
         console.log(req.body.id + ":" + req.body.email + ":" + req.body.password);
         console.log(result);
@@ -141,7 +155,7 @@ router.post('/api/register', function (req, res, next) {
             if (!user) {
                 console.log("login failed");
                 console.log("test");
-                
+
                 return res.status(401).send("posterroor");
             }
             req.logIn(user, function (err) {
@@ -228,7 +242,7 @@ router.post('/api/replay', checkAuthenticated ,function(req, res, next){
                 console.log(err);
                 res.status(401).send();
             }
-                    
+
         })
 })
 router.post('/api/changePassword', checkAuthenticated, function(req,res,next){
@@ -242,13 +256,13 @@ router.post('/api/changePassword', checkAuthenticated, function(req,res,next){
                     console.log(err1);
                 console.log(result);
            })
-            res.redirect('/user/'+req.session.passport.user+'/profile');    
+            res.redirect('/user/'+req.session.passport.user+'/profile');
         }else
             res.status(401).send('비밀번호 틀림');
     });
     // res.send('<script type="text/javascript">alert("오류발생");</script>');
     // res.redirect('/user/'+req.session.passport.user+'/profile');
-    
+
 })
 router.post('/api/deleteAccount', checkAuthenticated, function(req, res, next){
     console.log(req.body.current);
@@ -258,9 +272,9 @@ router.post('/api/deleteAccount', checkAuthenticated, function(req, res, next){
                 connection.query('delete from users where id = ?',[req.session.passport.user], function(err, result){
                 if(!err){
                     console.log(err);
-                    req.logout(); 
+                    req.logout();
                     res.redirect('/');
-                
+
                 }
                 console.log(err);
                 })
@@ -268,36 +282,70 @@ router.post('/api/deleteAccount', checkAuthenticated, function(req, res, next){
             res.send('<script type="text/javascript">alert("비밀번호가 다릅니다.");</script>');
     })
 })
+// router.get('/movie/:url', function (req, res, next) {
+//     // 이미지가 있는지 체크 하고 보낸다.
+//     var query = 'SELECT code,name, engname, storyname, story, running_time,DATE_FORMAT(open_date, "%Y/%m/%d") as open_date ,grade_name, contry_name FROM movies INNER JOIN  grade on movies.grade = grade.grade_index INNER JOIN  contry on movies.contry_id = contry.contry_index where code = ?';
+//     connection.query(query, [req.params.url], function (err, movie) {
+//         connection.query('select * from actors where code in (SELECT actors_index FROM relrationship_actor INNER JOIN  movies on movies.code = relrationship_actor.movie_index where movie_index = ?)', [req.params.url], function (err, actors) {
+//             connection.query('select user_id,content from replays where movie_index = ?',[req.params.url], function(errr, replays){
+//             // console.log(result);
+//             for (var m in actors) {
+//                	if(actors[m].has_picture !== 1){
+//                  actors[m].code = 'unknown';
+//                 }
+//             }
+//         req.session.url = movie[0].code;
+//         if(req.isAuthenticated()){
+//             res.render('movie', {
+//                 replay : replays,
+//                 row: movie[0],
+//                 actors: actors,
+//                 name: req.session.passport.user
+//                 });
+//         }else{
+//             res.render('movie', {
+//                 replay : replays,
+//                 row: movie[0],
+//                 actors: actors
+//                 });
+//                 }
+//             });
+//         });
+//     });
+// });
+
 router.get('/movie/:url', function (req, res, next) {
     // 이미지가 있는지 체크 하고 보낸다.
-    var query = 'SELECT code,name, engname, storyname, story, running_time,DATE_FORMAT(open_date, "%Y/%m/%d") as open_date ,grade_name, contry_name FROM movies INNER JOIN  grade on movies.grade = grade.grade_index INNER JOIN  contry on movies.contry_id = contry.contry_index where code = ?';
-    connection.query(query, [req.params.url], function (err, movie) {
-        connection.query('select * from actors where code in (SELECT actors_index FROM relrationship_actor INNER JOIN  movies on movies.code = relrationship_actor.movie_index where movie_index = ?)', [req.params.url], function (err, actors) {
-            connection.query('select user_id,content from replays where movie_index = ?',[req.params.url], function(errr, replays){
-            // console.log(result);
-            for (var m in actors) {   
-               	if(actors[m].has_picture !== 1){
-                 actors[m].code = 'unknown';
-                }
-            }
-        req.session.url = movie[0].code;
-        if(req.isAuthenticated()){
-            res.render('movie', {
-                replay : replays,
-                row: movie[0],
-                actors: actors,
-                name: req.session.passport.user
-                });
-        }else{
-            res.render('movie', {
-                replay : replays,
-                row: movie[0],
-                actors: actors
-                }); 
-                }     
-            });    
-        });
-    });
+    var columns = ['movies.code','movies.name','engname','storyname','story','running_time', 'open_date',
+                'grade.name AS grade', 'country.name as country'];
+
+
+    var query1 = db.select(columns).from('movies')
+      .innerJoin('country', 'movies.country_id','country.code')
+      .innerJoin('grade', 'movies.grade','grade.code')
+      .where('movies.code', req.params.url)
+
+
+    var query2 = db.select().from('actors').whereIn('actors.code', function() {
+      this.select('actors_index').from('relrationship_actor')
+        .innerJoin('movies','movies.code','relrationship_actor.movie_index')
+        .where('movie_index', req.params.url)
+      })
+
+    var query3 = db.select('genre_name as genre').from('genre').whereIn('genre.genre_index', function() {
+      this.select('genre_index').from('relrationship_genre')
+          .where('movie_index', req.params.url)
+    })
+
+
+    Promise.all([query1, query2, query3])
+    .then( (values) => {
+      res.send(values);
+    })
+    .catch( (err) => {
+      console.log(err);
+    })
+
 });
 
 
@@ -323,7 +371,7 @@ router.get('/board/view', function (req, res, next) {
         check_total_page();
         current_page = 1;
     }
-    connection.query('SELECT  board_index, board_user, board_title,DATE_FORMAT(board_edit_time, "%Y/%m/%d %T") as datetimealpha, board_view_count from board ORDER BY board_index desc limit ?,20', 
+    connection.query('SELECT  board_index, board_user, board_title,DATE_FORMAT(board_edit_time, "%Y/%m/%d %T") as datetimealpha, board_view_count from board ORDER BY board_index desc limit ?,20',
         [(current_page - 1) * 20], function (err, result) {
         var start_page = current_page - position;
         var offset;
