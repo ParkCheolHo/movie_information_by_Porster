@@ -335,3 +335,5 @@ function deleteAllModalContent() {
   $('#moviePosterContainer').empty();
   $('#movieInformationArea').empty();
 }
+
+
