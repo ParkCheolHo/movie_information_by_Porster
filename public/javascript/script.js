@@ -20,7 +20,7 @@ function isotopeadd (data) {
                 a.setAttribute('data-toggle', 'modal');
                 a.setAttribute('data-target', '#myModal');
                 a.setAttribute('code', item.code);
-                img.src = "/images/movie/Poster/" + item.code + ".jpg";
+                img.src = "/images/movie/poster/" + item.code + ".jpg";
                 div.appendChild(a);
                 a.appendChild(img);
                 $grid.append(div).isotope('appended', div);
@@ -298,10 +298,10 @@ function setModal(result) {
   $.each(result[1], function(index, value){
     var actor = $("<div class='col-md-4 col-xs-6'></div>");
     if(value.has_picture){
-      actor.append("<a class='thumbnail actorimg' ><img src=/images/movie/Actors/"+value.code+".jpg></a>");
+      actor.append("<a class='thumbnail actorimg' ><img src=/images/movie/actor/"+value.code+".jpg></a>");
     }
     else {
-      actor.append("<a class='thumbnail actorimg' ><img src=/images/movie/unknown.jpg></a>");
+      actor.append("<a class='thumbnail actorimg' ><img src=/images/movie/unknown.png></a>");
     }
     actor.append("<h6 style='text-align: center'>" + value.name + "</h6>");
     $('#movieActorsContainer').append(actor);
@@ -314,7 +314,7 @@ function setModal(result) {
     }
      genre = genre + value.genre;
   })
-  $('#moviePosterContainer').append("<a class='thumbnail' ><img src=/images/movie/Poster/"+movieInfo.code+".jpg></a>")
+  $('#moviePosterContainer').append("<a class='thumbnail' ><img src=/images/movie/poster/"+movieInfo.code+".jpg></a>")
   $('#movieInformationArea').append("<div class='col-md-12'>country : "+ movieInfo.country +"</div>")
   $('#movieInformationArea').append("<div class='col-md-12'>상영시간 : "+ movieInfo.running_time +"</div>")
   $('#movieInformationArea').append("<div class='col-md-12'>grade : "+ movieInfo.grade +"</div>")
